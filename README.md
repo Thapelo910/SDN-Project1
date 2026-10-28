@@ -43,8 +43,8 @@ This desktop application provides core text editing capabilities with file manag
 1. Clone the repository:
    ```bash
    git clone [https://github.com/Thapelo910/SDN-Project1.git](https://github.com/Thapelo910/SDN-Project1.git)
-2.Open Apache NetBeans.
-3.Go to File -> Open Project... and select the cloned NotepadApp folder.
-4.Clean and build the Maven project.
-5.Run NotepadApp.java (or the primary GUI class).
+2. Open Apache NetBeans.
+3. Go to File -> Open Project... and select the cloned NotepadApp folder.
+4. Clean and build the Maven project.
+5. Run NotepadApp.java (or the primary GUI class).
   
