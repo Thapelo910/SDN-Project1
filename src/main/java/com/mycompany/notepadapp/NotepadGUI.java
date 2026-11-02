@@ -167,7 +167,25 @@ public class NotepadGUI extends JFrame implements ActionListener {
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
-    }
+        
+        // Find where editMenu components are initialized and add shortcut key bindings:
+        itemCut.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemPaste.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemSelectAll.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+
+        // Add a "Clear All" option to editMenu
+        JMenuItem itemClearAll = new JMenuItem("Clear All");
+        itemClearAll.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(this, "Are you sure you want to clear all text?", 
+                    "Clear Text", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                textArea.setText("");
+            }
+        });
+        editMenu.addSeparator();
+        editMenu.add(itemClearAll);
+
+        }
 
     /**
      * Calculates current caret line/column numbers alongside total word and character counts,
