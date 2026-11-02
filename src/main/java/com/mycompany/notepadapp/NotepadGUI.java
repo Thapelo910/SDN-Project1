@@ -236,25 +236,48 @@ public class NotepadGUI extends JFrame implements ActionListener {
     // ==========================================
 
     /** Clears the text editor canvas and resets active file tracking. */
+    /*
     private void newFile() {
         textArea.setText("");
         currentFile = null;
         setTitle("Notepad Application - Untitled");
-    }
-
+    }*/
+    private void newFile(){//begin method newFile
+        //prompt user to save unsaved text before clearing
+        if(!textArea.getText().trim().isEmpty()){                                   //begin if
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Do you want to save changes before creating a new document?",
+                    "Unsaved Changes",JOptionPane.YES_NO_CANCEL_OPTION);
+            
+            if(confirm == JOptionPane.YES_OPTION){                                  //begin else if
+                saveFile();                
+            }else if(confirm == JOptionPane.CANCEL_OPTION){
+                return;
+            }//end else if
+        }//end if
+        textArea.setText("");
+        currentFile = null;
+        setTitle("Notepad Application - Untitled");
+    }//end method newFile
+    
     /** Opens a file dialog chooser and reads text content into the main editor. */
-    private void openFile() {
+
+    private void openFile(){//begin end openFile method
+        
+        // Restrict file chooser to show only .txt files
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text Documents (*.txt)", "txt"));
+        
         int option = fileChooser.showOpenDialog(this);
-        if (option == JFileChooser.APPROVE_OPTION) {
+        if (option ==JFileChooser.APPROVE_OPTION){                                              //begin if
             currentFile = fileChooser.getSelectedFile();
-            try (BufferedReader reader = new BufferedReader(new FileReader(currentFile))) {
+            try(BufferedReader reader = new BufferedReader(new FileReader(currentFile))){
                 textArea.read(reader, null);
-                setTitle("Notepad Application - " + currentFile.getName());
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error opening file: " + ex.getMessage());
-            }
-        }
-    }
+                setTitle("NotePad Application - "+ currentFile.getName());
+            }catch(IOException ex){                                                             //begin error handling
+                JOptionPane.showMessageDialog(this, "Error opening file"+ex.getMessage(),"File Error",JOptionPane.ERROR_MESSAGE);
+            }//end error handling
+           }//end if     
+    }//end openFile() method
 
     /** Saves current text area content back to active file or delegates to Save As. */
     private void saveFile() {
@@ -270,17 +293,23 @@ public class NotepadGUI extends JFrame implements ActionListener {
     }
 
     /** Opens file dialog chooser to save document under a specified path/filename. */
-    private void saveFileAs() {
+    private void saveFileAs(){                                                      //begin method saveFileAs
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text Documents (*.txt)","txt"));
         int option = fileChooser.showSaveDialog(this);
-        if (option == JFileChooser.APPROVE_OPTION) {
+        if(option == JFileChooser.APPROVE_OPTION){                                 //begin if
             currentFile = fileChooser.getSelectedFile();
+            
+            //Append .txt extension if missing
+            if(!currentFile.getName().toLowerCase().endsWith(".txt")){      //begin if   
+                currentFile = new File(currentFile.getAbsolutePath()+ ".txt");
+            }//end if
             saveFile();
-            if (currentFile != null) {
-            setTitle("Notepad Application - " + currentFile.getName());
-      }
-     }
-    }
-
+            if(currentFile != null){                                               //begin if
+               setTitle("Notepad Application - "+ currentFile.getName());
+            }//end if
+        }//end if        
+    }//end method saveFileAs
+    
     /** Prompts user with input dialog to adjust text area font point size. */
     private void changeFontSize() {
         String input = JOptionPane.showInputDialog(this, "Enter Font Size:", "Font Size", JOptionPane.QUESTION_MESSAGE);
