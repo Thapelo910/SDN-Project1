@@ -191,22 +191,32 @@ public class NotepadGUI extends JFrame implements ActionListener {
      * Calculates current caret line/column numbers alongside total word and character counts,
      * reflecting changes dynamically in the status bar label.
      */
-    private void updateStatusBar() {
-        try {
-            int caretPos = textArea.getCaretPosition();
-            int line = textArea.getLineOfOffset(caretPos) + 1;
-            int col = caretPos - textArea.getLineStartOffset(line - 1) + 1;
+        private void updateStatusBar() {
+            try {
+                int caretPos = textArea.getCaretPosition();
+                int line = textArea.getLineOfOffset(caretPos) + 1;
+                int col = caretPos - textArea.getLineStartOffset(line - 1) + 1;
 
-            String text = textArea.getText().trim();
-            int chars = textArea.getText().length();
-            int words = text.isEmpty() ? 0 : text.split("\\s+").length;
+                String text = textArea.getText();
+                int totalChars = text.length();
+                int charsNoSpaces = text.replaceAll("\\s+", "").length();
+                int words = text.trim().isEmpty() ? 0 : text.trim().split("\\s+").length;
 
-            statusLabel.setText(String.format(" Line: %d | Col: %d | Words: %d | Chars: %d ",
-                    line, col, words, chars));
-        } catch (Exception ex) {
-            // Silence out-of-bounds selection calculations during high-speed text clearing
+                statusLabel.setText(String.format(" Line: %d | Col: %d | Words: %d | Chars: %d (No Spaces: %d) ",
+                    line, col, words, totalChars, charsNoSpaces));
+        }   catch (Exception ex) {
+            // Silence transient offset calculations during rapid edits
         }
-    }
+        }
+
+    // Add View Menu inside initComponents() of NotepadGUI.java:
+        JMenu viewMenu = new JMenu("View");
+        JCheckBoxMenuItem toggleStatus = new JCheckBoxMenuItem("Status Bar", true);
+        toggleStatus.addActionListener(e -> statusLabel.setVisible(toggleStatus.isSelected()));
+
+        viewMenu.add(toggleStatus);
+    menuBar.add(viewMenu); // Place between formatMenu and helpMenu
+    
 
     /**
      * Centralized event handling mechanism for menu action events.
