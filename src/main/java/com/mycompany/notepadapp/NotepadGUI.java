@@ -123,7 +123,7 @@ public class NotepadGUI extends JFrame implements ActionListener {
         fileMenu.addSeparator();
         fileMenu.add(itemExit);
 
-        // --- Edit Menu ---
+// --- Edit Menu ---
         editMenu = new JMenu("Edit");
         itemCut = new JMenuItem("Cut");
         itemCopy = new JMenuItem("Copy");
@@ -135,11 +135,28 @@ public class NotepadGUI extends JFrame implements ActionListener {
         itemPaste.addActionListener(this);
         itemSelectAll.addActionListener(this);
 
+        // Keyboard Accelerators (Shortcuts)
+        itemCut.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemPaste.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        itemSelectAll.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+
         editMenu.add(itemCut);
         editMenu.add(itemCopy);
         editMenu.add(itemPaste);
         editMenu.addSeparator();
         editMenu.add(itemSelectAll);
+
+        // Clear All Menu Item
+        JMenuItem itemClearAll = new JMenuItem("Clear All");
+        itemClearAll.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(this, "Are you sure you want to clear all text?", 
+                    "Clear Text", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                textArea.setText("");
+            }
+        });
+        editMenu.addSeparator();
+        editMenu.add(itemClearAll);
 
         // --- Format Menu ---
         formatMenu = new JMenu("Format");
@@ -161,31 +178,22 @@ public class NotepadGUI extends JFrame implements ActionListener {
         helpMenu.add(itemAbout);
 
         // Attach menus to main MenuBar
+       // --- Assemble Menu Bar ---
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(formatMenu);
+        
+        // View Menu (Status Bar Toggle)
+        JMenu viewMenu = new JMenu("View");
+        JCheckBoxMenuItem toggleStatus = new JCheckBoxMenuItem("Status Bar", true);
+        toggleStatus.addActionListener(e -> statusLabel.setVisible(toggleStatus.isSelected()));
+        viewMenu.add(toggleStatus);
+        menuBar.add(viewMenu);
+
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
-        
-        // Find where editMenu components are initialized and add shortcut key bindings:
-        itemCut.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        itemCopy.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        itemPaste.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        itemSelectAll.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-
-        // Add a "Clear All" option to editMenu
-        JMenuItem itemClearAll = new JMenuItem("Clear All");
-        itemClearAll.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(this, "Are you sure you want to clear all text?", 
-                    "Clear Text", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                textArea.setText("");
-            }
-        });
-        editMenu.addSeparator();
-        editMenu.add(itemClearAll);
-
-        }
+    } // <--- THIS CLOSES initComponents()
 
     /**
      * Calculates current caret line/column numbers alongside total word and character counts,
@@ -208,16 +216,7 @@ public class NotepadGUI extends JFrame implements ActionListener {
             // Silence transient offset calculations during rapid edits
         }
         }
-
-    // Add View Menu inside initComponents() of NotepadGUI.java:
-        JMenu viewMenu = new JMenu("View");
-        JCheckBoxMenuItem toggleStatus = new JCheckBoxMenuItem("Status Bar", true);
-        toggleStatus.addActionListener(e -> statusLabel.setVisible(toggleStatus.isSelected()));
-
-        viewMenu.add(toggleStatus);
-    menuBar.add(viewMenu); // Place between formatMenu and helpMenu
-    
-
+        
     /**
      * Centralized event handling mechanism for menu action events.
      *
