@@ -1,16 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.notepadapp;
 
+import javax.swing.SwingUtilities;
+
 /**
- *
- * @author HP
+ * Main entry point for launching the Notepad Application.
+ * 
+ * @author Thapelo Mathebola
  */
 public class NotepadApp {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        // Ensures the Swing GUI components are constructed safely on the Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> {
+            new NotepadGUI();
+        });
     }
 }
